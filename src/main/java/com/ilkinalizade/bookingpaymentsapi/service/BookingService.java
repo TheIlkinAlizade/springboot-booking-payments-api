@@ -2,6 +2,7 @@ package com.ilkinalizade.bookingpaymentsapi.service;
 
 import com.ilkinalizade.bookingpaymentsapi.dto.request.CreateBookingRequest;
 import com.ilkinalizade.bookingpaymentsapi.dto.response.BookingResponse;
+import com.ilkinalizade.bookingpaymentsapi.dto.response.PaymentResponse;
 import com.ilkinalizade.bookingpaymentsapi.entity.*;
 import com.ilkinalizade.bookingpaymentsapi.repository.BookingRepository;
 import com.ilkinalizade.bookingpaymentsapi.repository.PaymentRepository;
@@ -144,6 +145,26 @@ public class BookingService {
                 .slotTitle(booking.getSlot().getTitle())
                 .status(booking.getStatus().name())
                 .createdAt(booking.getCreatedAt())
+                .build();
+    }
+
+    public PaymentResponse getPaymentStatus(UUID bookingId, User user) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NoSuchElementException("Booking not found: " + bookingId));
+
+        if (!booking.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new IllegalStateException("You do not have access to this booking");
+        }
+
+        Payment payment = paymentRepository.findByBookingId(bookingId)
+                .orElseThrow(() -> new NoSuchElementException("Payment not found for booking: " + bookingId));
+
+        return PaymentResponse.builder()
+                .bookingId(booking.getId())
+                .bookingStatus(booking.getStatus().name())
+                .paymentStatus(payment.getStatus().name())
+                .amount(payment.getAmount())
+                .currency(payment.getCurrency())
                 .build();
     }
 }
