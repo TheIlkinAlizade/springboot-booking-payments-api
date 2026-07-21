@@ -10,6 +10,14 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    container_name: booking-payments-stripe-listener
+    command: listen --forward-to host.docker.internal:8080/api/webhooks/stripe --api-key ${STRIPE_SECRET_KEY}
+    environment:
+      - STRIPE_API_KEY=${STRIPE_SECRET_KEY}
+    volumes:
+      - stripe-config:/root/.config/stripe
 volumes:
   pgdata:
+  stripe-config:
