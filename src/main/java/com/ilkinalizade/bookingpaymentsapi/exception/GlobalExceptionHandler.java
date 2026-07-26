@@ -1,6 +1,7 @@
 package com.ilkinalizade.bookingpaymentsapi.exception;
 
 import com.ilkinalizade.bookingpaymentsapi.dto.response.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -75,5 +76,10 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return buildResponse(HttpStatus.CONFLICT, "This operation conflicts with existing data", null);
     }
 }
