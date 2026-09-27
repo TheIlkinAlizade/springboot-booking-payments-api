@@ -2,7 +2,7 @@
 
 Backend for a booking and appointments system with real payments. Built with Spring Boot 3, Spring Security (JWT), PostgreSQL, and Stripe Checkout + webhooks (test mode).
 
-**Live demo:** _coming soon_
+**Live demo:** _not planned for now — see setup instructions below to run locally_
 **Frontend repo:** [nextjs-booking-payments-client](https://github.com/TheIlkinAlizade/nextjs-booking-payments-client)
 **API docs (Swagger):** _coming soon_
 **Postman collection:** [`/postman`](./postman)
